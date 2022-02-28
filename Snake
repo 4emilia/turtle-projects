@@ -126,7 +126,8 @@ while running:
         # score
         score += 10
         if score > highscore:
-            high_score = score
+            highscore += 10
+            #high_score = score
         pen.clear()
         pen.write("Score: {} High Score: {}".format(score, highscore), align="center", font=("Courier", 15, "bold"))
 
