@@ -1,0 +1,139 @@
+import time
+import turtle
+import random
+from random import randint
+
+
+# Window
+wn = turtle.Screen()
+wn.title("Turtle Track")
+wn.setup(width=800, height= 500)
+wn.bgcolor("OliveDrab3")
+
+# Title
+pen = turtle.Turtle()
+pen.hideturtle()
+pen.penup()
+pen.color("white")
+pen.goto(-120, 210)
+pen.write("Turtle Track", font=("Courier", 25, "bold"))
+
+
+# Dirt
+dirt = turtle.Turtle()
+dirt.hideturtle()
+dirt.speed(0)
+dirt.penup()
+dirt.setpos(-350, 200)
+dirt.color("tan3")
+
+dirt.pendown()
+dirt.begin_fill()
+for i in range(2):
+    dirt.forward(700)
+    dirt.right(90)
+    dirt.forward(400)
+    dirt.right(90)
+dirt.end_fill()
+
+# Finish Line
+finish_line = turtle.Turtle()
+finish_line.hideturtle()
+finish_line.speed(0)
+finish_line.penup()
+finish_line.shape("square")
+
+finish_line.color("white")
+for i in range(10):
+    finish_line.goto(250, (170 - (i * 20 * 2)))
+    finish_line.stamp()
+for i in range(10):
+    finish_line.goto((250 + 20), (210 - 20) - (i * 20 * 2))
+    finish_line.stamp()
+
+finish_line.color("black")
+for i in range(10):
+    finish_line.setpos(250, (190 - (i * 20 * 2)))
+    finish_line.stamp()
+for i in range(10):
+    finish_line.setpos((250 + 20), ((190 - 20) - (i * 20 * 2)))
+    finish_line.stamp()
+
+# Turtles
+yellow_turtle = turtle.Turtle()
+yellow_turtle.color("yellow")
+yellow_turtle.shape("turtle")
+yellow_turtle.shapesize(1.3)
+yellow_turtle.penup()
+yellow_turtle.goto(-300, 150)
+yellow_turtle.pendown()
+
+green_turtle = turtle.Turtle()
+green_turtle.color("GreenYellow")
+green_turtle.shape("turtle")
+green_turtle.shapesize(1.3)
+green_turtle.penup()
+green_turtle.goto(-300, 50)
+green_turtle.pendown()
+
+blue_turtle = turtle.Turtle()
+blue_turtle.color("DarkSlateGray2")
+blue_turtle.shape("turtle")
+blue_turtle.shapesize(1.3)
+blue_turtle.penup()
+blue_turtle.goto(-300, -50)
+blue_turtle.pendown()
+
+purple_turtle = turtle.Turtle()
+purple_turtle.color("DarkOrchid3")
+purple_turtle.shape("turtle")
+purple_turtle.shapesize(1.3)
+purple_turtle.penup()
+purple_turtle.goto(-300, -150)
+purple_turtle.pendown()
+
+
+# Countdown
+pen.goto(0, 0)
+for i in range(3):
+    pen.write((3-i), font=("Courier", 25, "bold"))
+    time.sleep(1)
+    pen.clear()
+
+time.sleep(0.2)
+
+# Move Turtle
+while yellow_turtle.xcor() <= 230 and green_turtle.xcor() <= 230 and blue_turtle.xcor() <= 230 and purple_turtle.xcor() <= 230:
+    yellow_turtle.forward(randint(1, 8))
+    green_turtle.forward(randint(1, 8))
+    blue_turtle.forward(randint(1, 8))
+    purple_turtle.forward(randint(1, 8))
+
+# TURTLE SPIN
+pen.goto(-50,0)
+if yellow_turtle.xcor() >= 230:
+    pen.write("YELLOW WINS!!", font=("Courier", 25, "bold"))
+    for i in range(72):
+        yellow_turtle.right(5)
+        yellow_turtle.shapesize(2.5)
+
+elif green_turtle.xcor() >= 230:
+    pen.write("GREEN WINS!!", font=("Courier", 25, "bold"))
+    for i in range(72):
+        green_turtle.right(5)
+        green_turtle.shapesize(2.5)
+
+elif blue_turtle.xcor() >= 230:
+    pen.write("BLUE WINS!!", font=("Courier", 25, "bold"))
+    for i in range(72):
+        blue_turtle.right(5)
+        blue_turtle.shapesize(2.5)
+
+elif purple_turtle.xcor() >= 230:
+    pen.write("PURPLE WINS!!", font=("Courier", 25, "bold"))
+    for i in range(72):
+        purple_turtle.right(5)
+        purple_turtle.shapesize(2.5)
+
+time.sleep(1)
+wn.bye()
