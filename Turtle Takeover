@@ -1,0 +1,157 @@
+import turtle
+import math
+import random
+
+wn = turtle.Screen()
+wn.setup(width=800, height=800)
+wn.title("Turtle Takeover")
+wn.bgcolor("black")
+wn.tracer(0)
+
+# ship shape
+player_vertices = ((5,12), (5,0), (18,-10), (8,-10), (0,-22), (-8,-10), (-18,-10), (-5,0), (-5,12))
+wn.register_shape("player", player_vertices)
+
+alien_vertices = ((0, 10), (5, 7), (3,3), (10,0), (7, 4), (8, -6), (0, -10), (-5, -5), (-7, -7), (-10, 0), (-5, 4), (-1, 8))
+wn.register_shape("alien", alien_vertices)
+
+class Sprite(turtle.Turtle):
+    def __init__(self):
+        turtle.Turtle.__init__(self)
+        self.speed(0)
+        self.penup()
+
+
+def get_heading_to(t1, t2):
+    x1 = t1.xcor()
+    y1 = t1.ycor()
+
+    x2 = t2.xcor()
+    y2 = t2.ycor()
+
+    heading = math.atan2(y1 - y2, x1 - x2)
+    heading = heading * 180.0 / 3.14159
+
+    return heading
+
+player = Sprite()
+player.color("white")
+player.shape("player")
+player.score = 0
+
+missiles = []
+for _ in range(3):
+    missile = Sprite()
+    missile.color("red")
+    missile.shape("arrow")
+    missile.speed = 2
+    missile.state = "ready"
+    missile.hideturtle()
+    missiles.append(missile)
+
+pen = Sprite()
+pen.color("white")
+pen.hideturtle()
+pen.goto(0, 350)
+pen.write("Score: 0", False, align = "center", font = ("Arial", 24, "normal"))
+
+quitpen = Sprite()
+quitpen.hideturtle()
+quitpen.color("white")
+quitpen.goto(-350, -350)
+quitpen.write("'q' to quit", align = "left", font = ("Arial", 15, "normal"))
+
+aliens = []
+
+for i in range(5):
+    alien = Sprite()
+    alien.color("brown")
+    alien.shape("turtle")
+    alien.speed = random.randint(2, 6)
+    alien.speed = alien.speed / 100
+    alien.goto(0, 0)
+    heading = random.randint(0, 360)
+    distance = random.randint(400, 600)
+    alien.setheading(heading)
+    alien.fd(distance)
+    alien.setheading(get_heading_to(player, alien))
+    aliens.append(alien)
+
+def rotate_left():
+    player.lt(30)
+
+def rotate_right():
+    player.rt(30)
+
+def fire_missile():
+    for missile in missiles:
+        if missile.state == "ready":
+            missile.goto(0, 0)
+            missile.showturtle()
+            missile.setheading(player.heading())
+            missile.state = "fire"
+            break
+
+def quit_game():
+    global running
+    running = False
+
+
+# keyboard binding
+wn.listen()
+wn.onkey(rotate_left, "Left")
+wn.onkey(rotate_right, "Right")
+wn.onkey(fire_missile, "space")
+wn.onkey(quit_game,"q")
+
+running = True
+
+while running:
+    wn.update()
+    player.goto(0, 0)
+
+    # fire missile
+    for missile in missiles:
+        if missile.state == "fire":
+            missile.fd(missile.speed)
+
+        # border check
+        if missile.xcor() > 400 or missile.xcor() < -400 or missile.ycor() > 400 or missile.ycor() < -400:
+            missile.hideturtle()
+            missile.state = "ready"
+
+    for alien in aliens:
+        alien.fd(alien.speed)
+
+        # A/M collisions
+        for missile in missiles:
+            if alien.distance(missile) < 20:
+                heading = random.randint(0, 360)
+                distance = random.randint(800, 1000)
+                alien.setheading(heading)
+                alien.fd(distance)
+                alien.setheading(get_heading_to(player, alien))
+                alien.speed += 0.01
+
+                missile.goto(1000, 1000)
+                missile.hideturtle()
+                missile.state = "ready"
+
+                player.score += 10
+                pen.clear()
+                pen.write("Score: {}".format(player.score), False, align = "center", font = ("Courier", 24, "bold"))
+
+        # A/P collisions
+        if alien.distance(player) < 20:
+            # Reset alien
+            heading = random.randint(0, 360)
+            distance = random.randint(800, 1000)
+            alien.setheading(heading)
+            alien.fd(distance)
+            alien.setheading(get_heading_to(player, alien))
+            player.score -= 50
+            pen.clear()
+            pen.write("Score: {}".format(player.score), False, align = "center", font = ("Courier", 24, "bold"))
+
+wn.bye()
+#wn.mainloop()
