@@ -2,7 +2,7 @@ import turtle
 import time
 
 wn = turtle.Screen()
-wn.title("Tennis")
+wn.title("Turtle Tennis")
 wn.bgcolor("Black")
 wn.setup(width=800, height=600)
 wn.tracer(0)
@@ -32,7 +32,7 @@ paddle_b.goto(350, 0)
 # ball
 ball = turtle.Turtle()
 ball.speed(0)
-ball.shape("circle")
+ball.shape("turtle")
 ball.color("white")
 ball.penup()
 ball.goto(0, 0)
